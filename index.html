@@ -350,6 +350,7 @@
                 switch (state) {
                     case "TITLE":
                         sUI();
+                        playBGM(BGM1);
                         hideTo("#000", 600, () => {
                             state = "G1";
                             showFrom("#000", 700, null);
@@ -922,7 +923,7 @@
             let s1 = {};
             function initS1() {
                 state = "S1";
-                playBGM(BGM1);
+                // playBGM(BGM1);
                 s1 = {
                     px: BW / 2 - 16,
                     ptx: BW / 2 - 16,
@@ -1205,7 +1206,7 @@
             ];
             function initS2() {
                 state = "S2";
-                playBGM(BGM2);
+                // playBGM(BGM2);
                 s2 = {
                     px: 80,
                     py: G2Y - 42,
@@ -1523,7 +1524,7 @@
             const NX = [0.17, 0.37, 0.6, 0.8];
             function initS3() {
                 state = "S3";
-                playBGM(BGM3);
+                // playBGM(BGM3);
                 s3 = {
                     px: BW / 2 - 22,
                     ptx: BW / 2 - 22,
@@ -1834,7 +1835,7 @@
                     fareIn: 0,
                     breath: 0,
                 };
-                playBGM(BGME);
+                // playBGM(BGME);
             }
             function updEnd(dt) {
                 ED.t += dt;
