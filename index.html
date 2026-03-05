@@ -350,9 +350,16 @@
                 switch (state) {
                     case "TITLE":
                         sUI();
-                        playBGM(BGM1);
+                        playBGM(BGM1); // BGM langsung nyala di sini
                         hideTo("#000", 600, () => {
-                            state = "G1";
+                            state = "WARN"; // Pindah ke layar Warning dulu
+                            showFrom("#000", 700, null);
+                        });
+                        break;
+                    case "WARN":
+                        sUI();
+                        hideTo("#000", 500, () => {
+                            state = "G1"; // Baru pindah ke Panduan Stage 1
                             showFrom("#000", 700, null);
                         });
                         break;
@@ -669,6 +676,71 @@
                         );
                     },
                 );
+            }
+
+            // ================================================================
+            // WARNING SCREEN (PERMOHONAN PENTING)
+            // ================================================================
+            function drawWarn() {
+                // Background merah gelap
+                const g = ctx.createLinearGradient(0, 0, 0, BH);
+                g.addColorStop(0, "#1a0202");
+                g.addColorStop(1, "#0a0000");
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, BW, BH);
+
+                STARS.forEach((s) => {
+                    const a = Math.sin(T / 600 + s.ph) * 0.4 + 0.6;
+                    ctx.fillStyle = `rgba(255,100,100,${a * 0.3})`;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                const cx = BW / 2, cy = BH / 2;
+                const bx = cx - 290, by = cy - 120, bw = 580, bh = 240;
+
+                // Kotak Warning
+                ctx.fillStyle = "rgba(0,0,0,0.6)";
+                ctx.fillRect(bx + 8, by + 8, bw, bh);
+                const bgBox = ctx.createLinearGradient(bx, by, bx, by + bh);
+                bgBox.addColorStop(0, "#1a0505");
+                bgBox.addColorStop(1, "#260606");
+                ctx.fillStyle = bgBox;
+                ctx.fillRect(bx, by, bw, bh);
+                
+                // Border Warning
+                ctx.strokeStyle = "#ff3333";
+                ctx.lineWidth = 3;
+                ctx.strokeRect(bx, by, bw, bh);
+                ctx.strokeStyle = "#aa1111";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(bx + 6, by + 6, bw - 12, bh - 12);
+
+                [[bx, by], [bx + bw - 8, by], [bx, by + bh - 8], [bx + bw - 8, by + bh - 8]].forEach(([px, py]) => {
+                    ctx.fillStyle = "#ff5555";
+                    ctx.fillRect(px, py, 8, 8);
+                });
+
+                // Teks Warning
+                ctx.shadowColor = "#ff3333";
+                ctx.shadowBlur = 15;
+                txt("⚠  PESAN PENTING  ⚠", cx, by + 45, 12, "#ff5555");
+                ctx.shadowBlur = 0;
+
+                txt("Tolong, mulailah dengan hati yang tenang.", cx, by + 85, 7, "#ffcccc");
+                
+                txt("Aku akan benar-benar bersyukur, sangat senang,", cx, by + 125, 6.5, "#dddddd");
+                txt("dan sangat berterima kasih kepadamu...", cx, by + 145, 6.5, "#dddddd");
+                txt("jikalau kamu bersedia membaca semua yang", cx, by + 175, 6.5, "#dddddd");
+                txt("aku sampaikan di sini dari awal sampai akhir.", cx, by + 195, 6.5, "#dddddd");
+
+                txt("Tolong yaa, Meiy...", cx, by + 225, 6, "#ff8888");
+
+                // Animasi TAP
+                if (Math.floor(T / 600) % 2 === 0) {
+                    txt("► TAP UNTUK MELANJUTKAN ◄", cx, by + bh + 35, 6.5, "#ffffff");
+                }
             }
 
             // ================================================================
@@ -2349,6 +2421,7 @@
                 if (state === "END") updEnd(dt);
                 // DRAW
                 if (state === "TITLE") drawTitle();
+                else if (state === "WARN") drawWarn();
                 else if (state === "G1") {
                     const G = GD.G1;
                     drawGuide(
